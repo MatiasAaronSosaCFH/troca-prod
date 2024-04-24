@@ -36,7 +36,7 @@ public class EventServiceImplementation implements EventService {
     @Transactional(readOnly = true)
     public List<EventResponse> getByName(String name) throws EntityNotFoundException {
         List<EventEntity> searchEntities = eventRepository.findByNameIgnoreCaseContaining(name.toLowerCase());
-        if(searchEntities.isEmpty() || searchEntities == null || searchEntities.get().isEmpty()){
+        if(searchEntities.isEmpty()){
             throw new EntityNotFoundException("No events found");
         }
         List<EventResponse> response = eventMapper.toListEventResponse(searchEntities.get());
