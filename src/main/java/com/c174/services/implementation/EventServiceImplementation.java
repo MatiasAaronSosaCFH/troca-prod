@@ -47,7 +47,7 @@ public class EventServiceImplementation implements EventService {
     @Transactional(readOnly = true)
     public EventResponse getById(Long id) throws EntityNotFoundException {
         Optional<EventEntity> searchEntity = eventRepository.findById(id);
-        if(!searchEntity..isPresent()){
+        if(!searchEntity.isPresent()){
             throw new EntityNotFoundException("No events found");
         }
         EventResponse response = eventMapper.toEventResponse(searchEntity.get());
