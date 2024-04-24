@@ -39,7 +39,7 @@ public class EventServiceImplementation implements EventService {
         if(searchEntities.isEmpty()){
             throw new EntityNotFoundException("No events found");
         }
-        List<EventResponse> response = eventMapper.toListEventResponse(searchEntities.get());
+        List<EventResponse> response = eventMapper.toListEventResponse(searchEntities);
         return response;
     }
 
