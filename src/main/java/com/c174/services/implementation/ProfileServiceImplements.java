@@ -63,19 +63,27 @@ public class ProfileServiceImplements implements ProfileService {
     }
 
     @Override
+    public ProfileResponse updateProfile(ProfileRequest profile) throws EntityNotFoundException, EntityUploadException {
+        return null;
+    }
+
+    /*@Override
     @Transactional
     public ProfileResponse updateProfile(ProfileRequest profile) throws EntityNotFoundException, EntityUploadException {
         if(!profileRepository.existsById(profile.getId())){
             throw new EntityNotFoundException("Profile not found");
         }
         try {
-            ProfileEntity profileEntity = profileRepository.updateProfile(profile.getLastname(), profile.getDocument(), profile.getName()).get();
+            ProfileEntity profileEntity = profileRepository.updateProfile(profile.getLastname(),
+                    profile.getDocument(),
+                    profile.getName(),
+                    profile.getId()).get();
 
             return profileMapper.toProfileResponse(profileEntity);
         }catch (Exception e){
             throw new EntityUploadException("Error updating profile");
         }
-    }
+    }*/
 
     @Override
     @Transactional

@@ -37,7 +37,7 @@ public class SystemConfig {
 
     @Bean
     public UserDetailsService userDetailService(){
-        return username -> userRepository.findByUserName(username).orElseThrow(()-> new UsernameNotFoundException("User not found"));
+        return username -> userRepository.findByEmail(username).orElseThrow(()-> new UsernameNotFoundException("User not found"));
     }
 
     @Bean

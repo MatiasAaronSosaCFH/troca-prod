@@ -51,7 +51,7 @@ public class UserEntity implements Serializable, UserDetails {
 
     @Override
     public String getUsername() {
-        return this.profile.getName();
+        return this.email;
     }
 
     @Override

@@ -18,14 +18,16 @@ public interface ProfileRepository extends JpaRepository<ProfileEntity, Long> {
     @Query("UPDATE  ProfileEntity e SET e.isPresent = ?2 where e.id = ?1")
     void updateIsPresent(Long id, Boolean isPresent);
 
-    @Transactional
+    /*@Transactional
     @Modifying
     @Query("UPDATE ProfileEntity e SET e.lastname = :lastname," +
             " e.document = :document," +
-            " e.name = :name")
+            " e.name = :name " +
+            "WHERE e.id = :id")
     Optional<ProfileEntity> updateProfile(@Param("lastname")String lastname,
                                           @Param("document")String document,
-                                          @Param("name")String name);
+                                          @Param("name")String name,
+                                          @Param("id")Long id);*/
     @Query("SELECT e FROM ProfileEntity e WHERE e.user.id = ?1")
     ProfileEntity findByUserId(Long userId);
 

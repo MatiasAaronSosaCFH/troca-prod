@@ -5,8 +5,10 @@ import com.c174.exception.EntityDeleteException;
 import com.c174.exception.EntityNotFoundException;
 import com.c174.exception.EntityUploadException;
 import com.c174.models.event.EventEntity;
+import com.c174.models.profile.ProfileEntity;
 import com.c174.models.ticket.*;
 import com.c174.repositorys.EventRepository;
+import com.c174.repositorys.ProfileRepository;
 import com.c174.repositorys.TicketRepository;
 import com.c174.services.abstraccion.TicketService;
 import org.springframework.stereotype.Service;
@@ -20,15 +22,17 @@ import java.util.Optional;
 public class TicketServiceImplementation implements TicketService {
     private final TicketRepository ticketRepository;
     private final EventRepository eventRepository;
+    private final ProfileRepository profileRepository;
     private final TicketMapper ticketMapper;
     private final EnterpriseConsumeServiceImp enterpriseConsumeServiceImp;
     public TicketServiceImplementation(TicketRepository ticketRepository,
-                                       EventRepository eventRepository,
+                                       EventRepository eventRepository, ProfileRepository profileRepository,
                                        TicketMapper ticketMapper,
                                        EnterpriseConsumeServiceImp enterpriseConsumeServiceImp) {
 
         this.ticketRepository = ticketRepository;
         this.eventRepository = eventRepository;
+        this.profileRepository = profileRepository;
         this.ticketMapper = ticketMapper;
 
         this.enterpriseConsumeServiceImp = enterpriseConsumeServiceImp;
@@ -115,7 +119,9 @@ public class TicketServiceImplementation implements TicketService {
 
     @Override
     public List<TicketResponse> getTicketByEvent(String name) {
-        List<TicketEntity> tickets =ticketRepository.findByEventName(name);
+        List<EventEntity> events = eventRepository.findByNameIgnoreCaseContaining(name);
+        if (events.isEmpty()) return null;
+        List<TicketEntity> tickets = events.get(0).getTickets();
         List<TicketResponse> ticketResponses = ticketMapper.toListTicketResponse(tickets);
 
         return ticketResponses;
@@ -123,7 +129,12 @@ public class TicketServiceImplementation implements TicketService {
 
     @Override
     public List<TicketResponse> findTicketsByProfileAndByLock(Long id, Boolean lock) {
-        List<TicketEntity> tickets = ticketRepository.findByProfileIdAndByLock(id,lock);
+
+        Optional<ProfileEntity> profile = profileRepository.findById(id);
+
+        if (!profile.isPresent()) return null;
+
+        List<TicketEntity> tickets = profile.get().getTickets();
         List<TicketResponse> ticketResponses = ticketMapper.toListTicketResponse(tickets);
 
         return ticketResponses;
@@ -165,12 +176,12 @@ public class TicketServiceImplementation implements TicketService {
 
     @Override
     public TicketResponse update(Long id, TicketRequest request) throws EntityUploadException {
-        Optional<TicketEntity> ticket = ticketRepository.updateTicket(request.getEvent().getId(),
+       /* Optional<TicketEntity> ticket = ticketRepository.updateTicket(request.getEvent().getId(),
                 request.getPrice(),
                 request.getOwner().getId(),
                 request.getMeta(),
                 request.getId());
-        if (ticket.isPresent()) return ticketMapper.toTicketResponse(ticket.get());
+        if (ticket.isPresent()) return ticketMapper.toTicketResponse(ticket.get());*/
 
         return null;
     }
