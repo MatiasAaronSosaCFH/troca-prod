@@ -18,7 +18,7 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    private static final String SECRET_KEY = String.valueOf(UUID.randomUUID());
+    private static final String SECRET_KEY = "J3jnt2di37i2Did492Cdi30Djn378Cjs902A9787Db32D8ju";
 
     public String getToken(UserDetails user){
         return getToken(new HashMap<>(),user);
