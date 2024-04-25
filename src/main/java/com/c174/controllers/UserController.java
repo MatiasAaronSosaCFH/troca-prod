@@ -91,7 +91,7 @@ public class UserController {
 
         var auth = userService.loginUser(email,password);
 
-        if (auth == null) return new ResponseEntity<>("Email is already in use",HttpStatus.NOT_ACCEPTABLE);
+        if (auth == null) return new ResponseEntity<>("Email is not found", HttpStatus.NOT_FOUND);
 
         return new ResponseEntity<>(auth, HttpStatus.OK);
     }
