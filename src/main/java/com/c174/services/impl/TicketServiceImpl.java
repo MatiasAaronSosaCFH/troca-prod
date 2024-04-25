@@ -125,15 +125,17 @@ public class TicketServiceImpl implements TicketService {
      * @throws IOException excepcion relacionada con el manejo de el archivo
      */
     @Override
-    public TicketDTO checkTicket(File file) throws IOException {
+    public TicketDTO checkTicket(File file) throws IOException, WriterException {
         String data = null;
         try {
             data = QrGeneration.decodeQR(file);
         } catch (NotFoundException e) {
             throw new RuntimeException(e);
         }
+        String finalBase64 = QrGeneration.returnBase64(QrGeneration.generateQr(data, "UTF-8",200,200));
         Optional<Ticket> ticketResponse = ticketRepository.checkTicket(data);
         if(ticketResponse.isPresent()){
+            ticketResponse.get().setQr(finalBase64);
             return modelMapper.map(ticketResponse, TicketDTO.class);
         }
         return null;

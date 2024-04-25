@@ -3,6 +3,7 @@ package com.c174.services;
 import com.c174.dto.TicketDTO;
 import com.c174.dto.TicketResponse;
 import com.c174.models.Ticket;
+import com.google.zxing.WriterException;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,7 +15,7 @@ public interface TicketService {
     TicketDTO update(Long id, TicketDTO ticketDTO);
     TicketDTO disable(Long id);
     TicketDTO lockTicket(Long id);
-    TicketDTO checkTicket(File file) throws IOException;
+    TicketDTO checkTicket(File file) throws IOException, WriterException;
     TicketDTO renewQr(File file) throws IOException;
     List<TicketDTO> findDisabledTickets();
     List<TicketDTO> findAllAvailableTickets();
