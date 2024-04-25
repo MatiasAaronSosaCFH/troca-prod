@@ -5,13 +5,14 @@ import com.c174.models.embed.Audit;
 import com.c174.models.transaction.TransactionEntity;
 import com.c174.models.profile.ProfileEntity;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 
 
 @Entity
 @Table(name="tickets")
 @Data
+@NoArgsConstructor
 public class TicketEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
