@@ -3,8 +3,7 @@ package com.c174.models.event;
 import com.c174.models.embed.Audit;
 import com.c174.models.ticket.TicketEntity;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -15,6 +14,7 @@ import java.util.List;
 @Table(name="events")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class EventEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
