@@ -4,6 +4,7 @@ package com.c174.controllers;
 import com.c174.dto.TicketDTO;
 import com.c174.services.TicketService;
 import lombok.RequiredArgsConstructor;
+import com.google.zxing.WriterException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
