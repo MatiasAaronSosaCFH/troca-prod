@@ -29,7 +29,7 @@ public class SecurityConfig {
                                 .requestMatchers("**/**")
                                 .permitAll()
                                 .anyRequest()
-                                .authenticated())
+                                .permitAll())
                 .sessionManagement(sessionManager -> sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
