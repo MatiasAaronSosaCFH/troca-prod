@@ -72,7 +72,7 @@ public class TicketController {
      * @throws IOException excepcion relacionada a el manejo de archivos
      */
     @PostMapping("/checkTicket")
-    public ResponseEntity<?> checkTicket(@RequestParam("file") MultipartFile file) throws IOException {
+    public ResponseEntity<?> checkTicket(@RequestParam("file") MultipartFile file) throws IOException, WriterException {
         String filePath = System.getProperty("user.dir") + File.separator + file.getOriginalFilename();
 
         File convFile = new File(filePath);
