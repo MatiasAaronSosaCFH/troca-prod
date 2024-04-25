@@ -5,10 +5,12 @@ import com.c174.models.enumerators.StateTransaction;
 import com.c174.models.ticket.TicketEntity;
 import com.c174.models.profile.ProfileEntity;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.util.List;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name="transactions")
 @Data
