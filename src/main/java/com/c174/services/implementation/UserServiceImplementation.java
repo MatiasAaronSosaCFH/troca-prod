@@ -128,7 +128,6 @@ public class UserServiceImplementation implements UserService {
 
         profileEntity.setUser(userEntity);
         
-        profileRepository.save(profileEntity);
         UserResponse userResponse = userMapper.toUserResponse(userRepository.save(userEntity));
 
         AuthDto auth = AuthDto
