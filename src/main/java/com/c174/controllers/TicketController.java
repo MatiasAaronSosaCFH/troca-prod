@@ -16,6 +16,7 @@ import java.io.File;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/ticket")
@@ -28,13 +29,13 @@ public class TicketController {
 
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody File file) throws EntityNotFoundException {
-        TicketEnterpriceDto ticketResponseEnterprice = enterpriseConsumeServiceImp.checkTicket(file);
-        if (ticketResponseEnterprice.getIsLocked()){
+        Optional<TicketEnterpriceDto> ticketResponseEnterprice = Optional.of(enterpriseConsumeServiceImp.checkTicket(file));
+        if (ticketResponseEnterprice.get().getIsLocked()){
             return new ResponseEntity<>("Ticket is already on service", HttpStatus.NOT_ACCEPTABLE);
         }
+        if (ticketResponseEnterprice.get().getIsPresent()) return new ResponseEntity<>("Ticket is not available", HttpStatus.NOT_ACCEPTABLE);
 
-
-        TicketResponse ticketResponse = ticketServiceImp.create(ticketResponseEnterprice);
+        TicketResponse ticketResponse = ticketServiceImp.create(ticketResponseEnterprice.get());
         return new ResponseEntity<>(ticketResponse,HttpStatus.CREATED);
     }
 

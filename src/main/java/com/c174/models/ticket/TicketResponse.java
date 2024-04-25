@@ -4,9 +4,7 @@ import lombok.Builder;
 import com.c174.models.embed.Audit;
 import com.c174.models.event.EventResponse;
 import com.c174.models.profile.ProfileResponse;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Builder
