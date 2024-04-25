@@ -125,6 +125,9 @@ public class UserServiceImplementation implements UserService {
                 .role(Role.USER)
                 .build();
 
+
+        profileEntity.setUser(userEntity);
+        
         profileRepository.save(profileEntity);
         UserResponse userResponse = userMapper.toUserResponse(userRepository.save(userEntity));
 
