@@ -27,7 +27,10 @@ public interface TicketRepository extends JpaRepository<TicketEntity, Long> {
     @Query("UPDATE TicketEntity t SET t.onService = :onService WHERE t.id = :id")
     void changeServiceTicket(@Param("onService")Boolean onService, @Param("id")Long id);
 
+
     @Modifying
+
+    /*@Modifying
     @Query("UPDATE TicketEntity t SET t.event = :event," +
             " t.price = :price," +
             " t.owner = :owner," +
