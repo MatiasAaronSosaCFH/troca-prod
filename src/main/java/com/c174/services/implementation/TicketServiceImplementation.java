@@ -67,8 +67,8 @@ public class TicketServiceImplementation implements TicketService {
     public  TicketResponse changeServiceTicket(Long id){
         Optional<TicketEntity> ticket = ticketRepository.findById(id);
         if (!ticket.isPresent()) return null;
-
-        return ticketMapper.toTicketResponse(ticketRepository.changeServiceTicket(!ticket.get().getOnServie(), id).get());
+        ticketRepository.changeServiceTicket(!ticket.get().getOnServie(), id);
+        return ticketMapper.toTicketResponse(ticket.get());
     }
     @Override
     public List<TicketResponse> takeTicketsOnServiceByProfile(Long profileId, Boolean onService) {
