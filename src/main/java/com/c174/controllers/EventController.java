@@ -68,10 +68,10 @@ public class EventController {
         if (entry == null) return new ResponseEntity<>("Imageg is null", HttpStatus.NOT_ACCEPTABLE);
 
         Map<String, Object> bodyResponse = new HashMap<>();
-        if( event == null || event.isEmpty() ){
+        if( event == null ){
             throw new NoBodyException("No se recibio ningun dato");
         }
-        EventResponse response = eventService.saveImg(event.get(), img);
+        EventResponse response = eventService.saveImg(event, img);
         bodyResponse.put("data", response);
         bodyResponse.put("success", Boolean.TRUE);
         return ResponseEntity.status(HttpStatus.CREATED).body(bodyResponse);
