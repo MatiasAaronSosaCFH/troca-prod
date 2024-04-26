@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,9 +22,12 @@ public interface TicketRepository extends JpaRepository<TicketEntity, Long> {
     @Query("SELECT t FROM TicketEntity t WHERE t.isLock = :lock")
     List<TicketEntity> findAllLock(@Param("lock") Boolean lock);
 
+    /*@Transactional
+    @Modifying
     @Query("UPDATE TicketEntity t SET t.onService = :onService WHERE t.id = :id")
-    Optional<TicketEntity> changeServiceTicket(@Param("onService")Boolean onService, @Param("id")Long id);
-    /*@Modifying
+    void changeServiceTicket(@Param("onService")Boolean onService, @Param("id")Long id);
+
+    @Modifying
     @Query("UPDATE TicketEntity t SET t.event = :event," +
             " t.price = :price," +
             " t.owner = :owner," +
