@@ -27,6 +27,12 @@ public class TicketController {
     private final TicketService ticketServiceImp;
     private final EnterpriseConsumeServiceImp enterpriseConsumeServiceImp;
 
+    @PutMapping("/changeService/{id}")
+    public ResponseEntity<?> changeServiceTicket(@PathVariable Long id){
+        TicketResponse ticketResponse = ticketServiceImp.changeServiceTicket(id);
+        if (ticketResponse == null) return new ResponseEntity<>("Ticket not found",HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(ticketResponse,HttpStatus.OK);
+    }
     @GetMapping("/onService")
     public ResponseEntity<?> takeTicketsFromProfileOnService(@RequestParam Long profileId, @RequestParam Boolean onService){
         List<TicketResponse> ticketResponse = ticketServiceImp.takeTicketsOnServiceByProfile(profileId, onService);

@@ -12,6 +12,7 @@ public interface TicketService extends GenericService<TicketResponse, TicketRequ
 
     TicketResponse create(TicketEnterpriceDto ticketRequest) throws EntityNotFoundException;
     List<TicketResponse> takeTicketsOnServiceByProfile(Long profileId,Boolean onService);
+    TicketResponse changeServiceTicket(Long id);
     List<TicketResponse> listTickets();
     TicketResponse checkTicket(File file);
     TicketResponse renewQr(File file);
