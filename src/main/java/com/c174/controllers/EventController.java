@@ -10,7 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,12 +61,17 @@ public class EventController {
 
     @Operation(summary = "Create a new event - only admin")
     @PostMapping("/create")
-    public ResponseEntity<?> saveEvent( @RequestBody @Valid Optional<EventRequest> event) throws NoBodyException,  AlreadyExistsException, EntityExistsException {
+    public ResponseEntity<?> saveEvent(@RequestBody @Valid Optional<EventRequest> event, @RequestParam MultipartFile img)
+            throws NoBodyException, AlreadyExistsException, EntityExistsException, IOException {
+
+        BufferedImage entry = ImageIO.read(img.getInputStream());
+        if (entry == null) return new ResponseEntity<>("Imageg is null", HttpStatus.NOT_ACCEPTABLE);
+
         Map<String, Object> bodyResponse = new HashMap<>();
         if( event == null || event.isEmpty() ){
             throw new NoBodyException("No se recibio ningun dato");
         }
-        EventResponse response = eventService.save(event.get());
+        EventResponse response = eventService.saveImg(event.get(), img);
         bodyResponse.put("data", response);
         bodyResponse.put("success", Boolean.TRUE);
         return ResponseEntity.status(HttpStatus.CREATED).body(bodyResponse);

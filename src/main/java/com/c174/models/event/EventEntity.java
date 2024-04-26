@@ -32,6 +32,8 @@ public class EventEntity {
     private Date dateEnd;
     private String address;
     private Boolean isPresent;
+    private String img;
+    private String imgId;
 
     public EventEntity(String name) {
         this.name = name;

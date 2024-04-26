@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,6 +61,17 @@ public class TicketServiceImplementation implements TicketService {
         ticketResponse.setMeta(ticketRequest.getQr());
 
         return ticketResponse;
+    }
+
+    @Override
+    public List<TicketResponse> takeTicketsOnServiceByProfile(Long profileId, Boolean onService) {
+        List<TicketEntity> ticket = ticketRepository.findByProfileId(profileId);
+        if (ticket.isEmpty()) return ticketMapper.toListTicketResponse(ticket);
+        List<TicketEntity> tickets = new ArrayList<>();
+        for (TicketEntity ticket1 : ticket){
+            if (ticket1.getOnServie()) tickets.add(ticket1);
+        }
+        return ticketMapper.toListTicketResponse(tickets);
     }
 
     @Override

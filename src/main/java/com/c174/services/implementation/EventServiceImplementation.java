@@ -4,9 +4,12 @@ import com.c174.exception.*;
 import com.c174.models.event.*;
 import com.c174.repositorys.EventRepository;
 import com.c174.services.abstraccion.EventService;
+import com.c174.utils.CloudinaryService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -15,9 +18,11 @@ import java.util.Optional;
 public class EventServiceImplementation implements EventService {
     private final EventRepository eventRepository;
     private final EventMapper eventMapper;
-    public EventServiceImplementation(EventRepository eventRepository, EventMapper eventMapper) {
+    private final CloudinaryService cloudinaryService;
+    public EventServiceImplementation(EventRepository eventRepository, EventMapper eventMapper, CloudinaryService cloudinaryService) {
         this.eventRepository = eventRepository;
         this.eventMapper = eventMapper;
+        this.cloudinaryService = cloudinaryService;
     }
     @Override
     @Transactional(readOnly = true)
@@ -55,14 +60,25 @@ public class EventServiceImplementation implements EventService {
     }
 
     @Override
+    public EventResponse save(EventRequest request) throws AlreadyExistsException, EntityExistsException {
+        return null;
+    }
+
+
     @Transactional
-    public EventResponse save(EventRequest event) throws EntityExistsException {
+    public EventResponse saveImg(EventRequest event, MultipartFile file)
+            throws EntityExistsException, IOException {
+
+        Map resultado = cloudinaryService.subirFoto(file);
+
         if(eventRepository.existsByName(event.getName())){
             throw new EntityExistsException("Event already exists");
         }
         EventEntity eventEntity = new EventEntity();
         eventEntity.setName(event.getName());
         eventEntity.setIsPresent(Boolean.TRUE);
+        eventEntity.setImg((String) resultado.get("url"));
+        eventEntity.setImgId((String) resultado.get("public_id"));
         EventEntity eventToResponse = eventRepository.save(eventEntity);
         EventResponse eventResponse = eventMapper.toEventResponse(eventToResponse);
         return eventResponse;

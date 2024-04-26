@@ -18,6 +18,7 @@ public class TicketEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String meta;
+    private Boolean onServie;
     @ManyToOne(
             cascade = {CascadeType.MERGE}
     )

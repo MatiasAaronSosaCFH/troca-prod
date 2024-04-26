@@ -11,6 +11,7 @@ import java.util.List;
 public interface TicketService extends GenericService<TicketResponse, TicketRequest>{
 
     TicketResponse create(TicketEnterpriceDto ticketRequest) throws EntityNotFoundException;
+    List<TicketResponse> takeTicketsOnServiceByProfile(Long profileId,Boolean onService);
     List<TicketResponse> listTickets();
     TicketResponse checkTicket(File file);
     TicketResponse renewQr(File file);

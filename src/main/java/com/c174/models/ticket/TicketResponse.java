@@ -12,6 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 public class TicketResponse {
     private Long id;
+    private Boolean onService;
     private String meta;
     private EventResponse event;
     private Audit audit;

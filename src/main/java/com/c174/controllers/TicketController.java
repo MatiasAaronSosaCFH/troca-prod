@@ -27,6 +27,11 @@ public class TicketController {
     private final TicketService ticketServiceImp;
     private final EnterpriseConsumeServiceImp enterpriseConsumeServiceImp;
 
+    @GetMapping("/onService")
+    public ResponseEntity<?> takeTicketsFromProfileOnService(@RequestParam Long profileId, @RequestParam Boolean onService){
+        List<TicketResponse> ticketResponse = ticketServiceImp.takeTicketsOnServiceByProfile(profileId, onService);
+        return new ResponseEntity<>(ticketResponse, HttpStatus.OK);
+    }
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody File file) throws EntityNotFoundException {
         Optional<TicketEnterpriceDto> ticketResponseEnterprice = Optional.of(enterpriseConsumeServiceImp.checkTicket(file));
