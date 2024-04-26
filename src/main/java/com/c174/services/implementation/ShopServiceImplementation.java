@@ -54,7 +54,7 @@ public class ShopServiceImplementation implements ShopService {
             items.add(createItemRequest(ticket));
 
             PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
-                    .success("https://microfrontmpreact-production.up.railway.app/ckeckout/success")
+                    .success("https://c17-34-m-java.vercel.app/")
                     .pending("")
                     .failure("https://microfrontmpreact-production.up.railway.app/ckeckout/failure")
                     .build();
@@ -101,11 +101,11 @@ public class ShopServiceImplementation implements ShopService {
     private PreferenceItemRequest createItemRequest(TicketEntity ticket) {
         return PreferenceItemRequest.builder()
                 .id(ticket.getId().toString())
-                .title("Entrada para el evento: " + ticket.getEvent().getName())
-                .description("Entrada para el evento: " + ticket.getEvent().getName())
+                .title(ticket.getEvent().getName())
+                .description(ticket.getEvent().getName())
                 .quantity(1)
                 .currencyId("ARS")
-                .unitPrice(new BigDecimal("1000")) // TODO: cambiar esto
+                .unitPrice(new BigDecimal(ticket.getPrice().toString())) // TODO: cambiar esto
                 .build();
     }
 
