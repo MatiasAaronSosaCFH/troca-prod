@@ -44,11 +44,16 @@ public class TicketController {
 
     @PutMapping("/postOnService")
     public ResponseEntity<?> postOnService(@RequestParam TicketRequest ticket){
-        if (ticket ==  null) return new ResponseEntity<>();
+        if (ticket ==  null) return new ResponseEntity<>("ticket is not acceptable",HttpStatus.NOT_ACCEPTABLE);
+        if (ticket.getId() == null) return new ResponseEntity<>("id is blank", HttpStatus.NOT_ACCEPTABLE);
+        if (ticket.getPrice() == 0 || ticket.getPrice() == null) return new ResponseEntity<>("price is not acceptable", HttpStatus.NOT_ACCEPTABLE);
         TicketResponse ticketResponse = ticketServiceImp.sellTicket(ticket);
+        Map<TicketResponse, String> response = new HashMap<>();
+        response.put(ticketResponse, "successfuly create");
 
-
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody File file) throws EntityNotFoundException {
 
