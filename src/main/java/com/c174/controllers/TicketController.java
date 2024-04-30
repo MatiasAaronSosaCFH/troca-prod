@@ -8,6 +8,7 @@ import com.c174.services.implementation.EnterpriseConsumeServiceImp;
 import com.c174.exception.EntityNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,6 +55,12 @@ public class TicketController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    @GetMapping("/wallet/{id}")
+    public ResponseEntity<?> walletTickets(@PathVariable @NotBlank Long id, @RequestParam @NotBlank Boolean isLock){
+        List<TicketResponse> tickets = ticketServiceImp.findTicketsByProfileAndByLock(id,isLock);
+        if (tickets == null) return new ResponseEntity<>("Profile not found", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(tickets, HttpStatus.OK);
+    }
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody File file) throws EntityNotFoundException {
 
