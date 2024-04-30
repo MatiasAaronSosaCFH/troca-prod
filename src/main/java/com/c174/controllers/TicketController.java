@@ -6,6 +6,7 @@ import com.c174.models.ticket.TicketResponse;
 import com.c174.services.abstraccion.TicketService;
 import com.c174.services.implementation.EnterpriseConsumeServiceImp;
 import com.c174.exception.EntityNotFoundException;
+import com.c174.utils.CloudinaryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
@@ -13,8 +14,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +33,7 @@ public class TicketController {
 
     private final TicketService ticketServiceImp;
     private final EnterpriseConsumeServiceImp enterpriseConsumeServiceImp;
+    private final CloudinaryService cloudinaryService;
 
     @PutMapping("/changeService/{id}")
     public ResponseEntity<?> changeServiceTicket(@PathVariable Long id){
@@ -62,9 +68,13 @@ public class TicketController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody File file) throws EntityNotFoundException {
+    public ResponseEntity<?> create(@RequestBody MultipartFile file) throws EntityNotFoundException, IOException {
 
-        Optional<TicketEnterpriceDto> ticketResponseEnterprice = Optional.of(enterpriseConsumeServiceImp.checkTicket(file));
+        BufferedImage entry = ImageIO.read(file.getInputStream());
+        if (entry == null) return new ResponseEntity<>("Qr is not supported",HttpStatus.NOT_ACCEPTABLE);
+        File img = cloudinaryService.convetir(file);
+
+        Optional<TicketEnterpriceDto> ticketResponseEnterprice = Optional.of(enterpriseConsumeServiceImp.checkTicket(img));
 
         if (ticketResponseEnterprice.get().getIsLocked()){
             return new ResponseEntity<>("Ticket is already on service", HttpStatus.NOT_ACCEPTABLE);
