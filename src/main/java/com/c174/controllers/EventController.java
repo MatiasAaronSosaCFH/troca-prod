@@ -59,7 +59,7 @@ public class EventController {
 
     @Operation(summary = "Create a new event - only admin")
     @PostMapping("/create")
-    public ResponseEntity<?> saveEvent(@RequestBody @Valid EventRequest event, @RequestPart("file") MultipartFile img)
+    public ResponseEntity<?> saveEvent(@RequestPart(value="request") @Valid EventRequest event, @RequestPart(value="files", required = false) MultipartFile img)
             throws NoBodyException, AlreadyExistsException, EntityExistsException, IOException {
 
         BufferedImage entry = ImageIO.read(img.getInputStream());
