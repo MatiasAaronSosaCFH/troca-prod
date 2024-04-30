@@ -67,13 +67,10 @@ public class EventServiceImplementation implements EventService {
 
     @Transactional
     public EventResponse saveImg(EventRequest event, MultipartFile file)
-            throws EntityExistsException, IOException {
+            throws  IOException {
 
         Map resultado = cloudinaryService.subirFoto(file);
 
-        if(eventRepository.existsByName(event.getName())){
-            throw new EntityExistsException("Event already exists");
-        }
         EventEntity eventEntity = new EventEntity();
         eventEntity.setName(event.getName());
         eventEntity.setIsPresent(Boolean.TRUE);

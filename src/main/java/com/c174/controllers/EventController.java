@@ -60,14 +60,14 @@ public class EventController {
     @Operation(summary = "Create a new event - only admin")
     @PostMapping("/create")
     public ResponseEntity<?> saveEvent(@RequestPart(value="request") @Valid EventRequest event, @RequestPart(value="files", required = false) MultipartFile img)
-            throws NoBodyException, AlreadyExistsException, EntityExistsException, IOException {
+            throws  IOException {
 
         BufferedImage entry = ImageIO.read(img.getInputStream());
         if (entry == null) return new ResponseEntity<>("Imageg is null", HttpStatus.NOT_ACCEPTABLE);
 
         Map<String, Object> bodyResponse = new HashMap<>();
         if( event == null  ){
-            throw new NoBodyException("No se recibio ningun dato");
+            return new ResponseEntity<>("no hay datos", HttpStatus.BAD_REQUEST);
         }
         EventResponse response = eventService.saveImg(event, img);
         bodyResponse.put("data", response);
