@@ -61,17 +61,17 @@ public class EventController {
 
     @Operation(summary = "Create a new event - only admin")
     @PostMapping("/create")
-    public ResponseEntity<?> saveEvent(@RequestBody @Valid Optional<EventRequest> event, @RequestParam MultipartFile img)
+    public ResponseEntity<?> saveEvent(@RequestParam @Valid EventRequest event, @RequestPart MultipartFile img)
             throws NoBodyException, AlreadyExistsException, EntityExistsException, IOException {
 
         BufferedImage entry = ImageIO.read(img.getInputStream());
         if (entry == null) return new ResponseEntity<>("Imageg is null", HttpStatus.NOT_ACCEPTABLE);
 
         Map<String, Object> bodyResponse = new HashMap<>();
-        if( event == null || event.isEmpty() ){
+        if( event == null  ){
             throw new NoBodyException("No se recibio ningun dato");
         }
-        EventResponse response = eventService.saveImg(event.get(), img);
+        EventResponse response = eventService.saveImg(event, img);
         bodyResponse.put("data", response);
         bodyResponse.put("success", Boolean.TRUE);
         return ResponseEntity.status(HttpStatus.CREATED).body(bodyResponse);
@@ -89,12 +89,12 @@ public class EventController {
 
     @Operation(summary = "Update a event - only admin")
     @PatchMapping("/id/{id}")
-    public ResponseEntity<?> updateEvent(@PathVariable Long id, @RequestBody @Valid Optional<EventRequest> event) throws EntityUploadException, EntityNotFoundException, NoBodyException {
+    public ResponseEntity<?> updateEvent(@PathVariable Long id, @RequestBody @Valid EventRequest event) throws EntityUploadException, EntityNotFoundException, NoBodyException {
         Map<String, Object> bodyResponse = new HashMap<>();
-        if( event == null || event.isEmpty() ){
+        if( event == null ){
             throw new NoBodyException("No se recibio ningun dato");
         }
-        eventService.update(id, event.get());
+        eventService.update(id, event);
         bodyResponse.put("data", "Entity update");
         bodyResponse.put("success", Boolean.TRUE);
         return ResponseEntity.status(HttpStatus.OK).body(bodyResponse);
