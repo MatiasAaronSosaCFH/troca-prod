@@ -36,10 +36,9 @@ public class TicketController {
         return new ResponseEntity<>(ticketResponse,HttpStatus.OK);
     }
 
-
     @GetMapping("/onService")
-    public ResponseEntity<?> takeTicketsFromProfileOnService(@RequestParam Long profileId, @RequestParam Boolean onService){
-        List<TicketResponse> ticketResponse = ticketServiceImp.takeTicketsOnServiceByProfile(profileId, onService);
+    public ResponseEntity<?> takeTicketsFromProfileOnService(@RequestParam Boolean onService){
+        List<TicketResponse> ticketResponse = ticketServiceImp.findByOnService(onService);
         return new ResponseEntity<>(ticketResponse, HttpStatus.OK);
     }
 
@@ -56,11 +55,12 @@ public class TicketController {
     }
 
     @GetMapping("/wallet/{id}")
-    public ResponseEntity<?> walletTickets(@PathVariable @NotBlank Long id, @RequestParam @NotBlank Boolean isLock){
-        List<TicketResponse> tickets = ticketServiceImp.findTicketsByProfileAndByLock(id,isLock);
+    public ResponseEntity<?> walletTickets(@PathVariable @NotBlank Long id, @RequestParam @NotBlank Boolean onService){
+        List<TicketResponse> tickets = ticketServiceImp.takeTicketsOnServiceByProfile(id,onService);
         if (tickets == null) return new ResponseEntity<>("Profile not found", HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(tickets, HttpStatus.OK);
     }
+
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody File file) throws EntityNotFoundException {
 
@@ -86,6 +86,7 @@ public class TicketController {
     @GetMapping("/checkTicket")
     public ResponseEntity<?> checkTicket(@RequestParam File file){
         TicketResponse ticketResponse = ticketServiceImp.checkTicket(file);
+        if (ticketResponse == null) return new ResponseEntity<>("ticket is not available", HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(ticketResponse, HttpStatus.OK);
     }
 

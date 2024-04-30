@@ -89,8 +89,14 @@ public class TicketServiceImplementation implements TicketService {
     }
 
     @Override
+    public List<TicketResponse> findByOnService(Boolean onService){
+        List<TicketEntity> ticketsOnService = ticketRepository.findByOnService(onService);
+        return ticketMapper.toListTicketResponse(ticketsOnService);
+    }
+    @Override
     public TicketResponse checkTicket(File file) {
         TicketEnterpriceDto ticketEnterprice = enterpriseConsumeServiceImp.checkTicket(file);
+        if(ticketEnterprice == null) return null;
         TicketResponse ticketResponse = TicketResponse.builder()
                 .id(ticketEnterprice.getId())
                 .build();
