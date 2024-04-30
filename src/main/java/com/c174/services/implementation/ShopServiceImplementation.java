@@ -6,9 +6,11 @@ import com.c174.models.shop.ShopItem;
 import com.c174.models.shop.UserShop;
 import com.c174.models.ticket.TicketEntity;
 import com.c174.models.ticket.TicketShop;
+import com.c174.models.user.UserEntity;
 import com.c174.repositorys.MpUserRepository;
 import com.c174.repositorys.ProfileRepository;
 import com.c174.repositorys.TicketRepository;
+import com.c174.repositorys.UserRepository;
 import com.c174.services.abstraccion.ShopService;
 import com.mercadopago.MercadoPagoConfig;
 import com.mercadopago.client.preference.*;
@@ -27,12 +29,15 @@ public class ShopServiceImplementation implements ShopService {
     private final TicketRepository ticketRepository;
     private final ProfileRepository profileRepository;
     private final MpUserRepository mpUserRepository;
+    private final UserRepository userRepository;
+    private final String baseUrl = "https://c17-34-m-java.vercel.app/";
     @Value("${mercadopago.access_token}")
     private String accessToken;
-    public ShopServiceImplementation(TicketRepository ticketRepository, ProfileRepository profileRepository, MpUserRepository mpUserRepository) {
+    public ShopServiceImplementation(TicketRepository ticketRepository, ProfileRepository profileRepository, MpUserRepository mpUserRepository, UserRepository userRepository) {
         this.ticketRepository = ticketRepository;
         this.profileRepository = profileRepository;
         this.mpUserRepository = mpUserRepository;
+        this.userRepository = userRepository;
     }
     @Override
     public String buyTickets(ShopItem ticket) throws AlreadyExistsException, MPException, MPApiException {
@@ -46,6 +51,10 @@ public class ShopServiceImplementation implements ShopService {
     }
     //Crea la preferencia de MercadoPago devolviendo el link hacia donde va a ser redirigido el comprador
     private String  createPreference(TicketEntity ticket, UserShop userBuyer, String accessTokenVendedor) throws MPException, MPApiException {
+
+        UserEntity user = userRepository.findByEmail(userBuyer.getEmail()).get();
+        Long idRef = user.getProfile().getId();
+
         try {
             MercadoPagoConfig.setAccessToken(accessTokenVendedor);
 
@@ -54,9 +63,9 @@ public class ShopServiceImplementation implements ShopService {
             items.add(createItemRequest(ticket));
 
             PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
-                    .success("https://c17-34-m-java.vercel.app/")
+                    .success(baseUrl + "wallet/upcoming/" + idRef)
                     .pending("")
-                    .failure("https://microfrontmpreact-production.up.railway.app/ckeckout/failure")
+                    .failure(baseUrl)
                     .build();
 
             PreferencePayerRequest payer = PreferencePayerRequest.builder()

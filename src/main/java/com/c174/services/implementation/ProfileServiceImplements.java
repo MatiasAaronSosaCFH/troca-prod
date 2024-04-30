@@ -26,6 +26,8 @@ import java.util.UUID;
 public class ProfileServiceImplements implements ProfileService {
     @Value("${mercadopago.base_url_auth}")
     private String base_url_auth;
+    @Value("${mercadopago.redirect_url}")
+    private String redirectUrl;
     private ProfileRepository profileRepository;
     private TicketRepository ticketRepository;
     private final ProfileMapper profileMapper;
@@ -157,7 +159,7 @@ public class ProfileServiceImplements implements ProfileService {
 
         String uuidRandom = profileEntity.getUser().getCredentialMPUser().getId().toString();
 
-        String url = base_url_auth+uuidRandom;
+        String url = base_url_auth + redirectUrl + id + "&state=" +uuidRandom;
         return url;
     }
 
