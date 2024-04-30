@@ -7,7 +7,7 @@ import org.springframework.web.client.RestTemplate;
 
 public abstract class  AbstractClient {
 
-    @Value("https://enterprice-api.onrender.com")
+    @Value("https://troca-prod-1.onrender.com/")
     protected String baseURl;
 
     protected final RestTemplate restTemplate;
