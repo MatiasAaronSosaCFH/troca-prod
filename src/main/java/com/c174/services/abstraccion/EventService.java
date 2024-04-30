@@ -11,5 +11,5 @@ import java.util.List;
 public interface EventService extends GenericService<EventResponse, EventRequest>{
 
 
-    EventResponse saveImg(EventRequest event, MultipartFile file) throws EntityExistsException, IOException;
+    EventResponse saveImg(EventRequest event, MultipartFile file) throws IOException;
 }
