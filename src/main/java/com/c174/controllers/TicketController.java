@@ -68,7 +68,8 @@ public class TicketController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody MultipartFile file) throws EntityNotFoundException, IOException {
+    public ResponseEntity<?> create(@RequestPart("file") MultipartFile file,
+                                    @RequestPart("user") Long id) throws EntityNotFoundException, IOException {
 
         BufferedImage entry = ImageIO.read(file.getInputStream());
         if (entry == null) return new ResponseEntity<>("Qr is not supported",HttpStatus.NOT_ACCEPTABLE);
@@ -81,7 +82,7 @@ public class TicketController {
         }
         if (ticketResponseEnterprice.get().getIsPresent()) return new ResponseEntity<>("Ticket is not available", HttpStatus.NOT_ACCEPTABLE);
 
-        TicketResponse ticketResponse = ticketServiceImp.create(ticketResponseEnterprice.get());
+        TicketResponse ticketResponse = ticketServiceImp.create(ticketResponseEnterprice.get(), id);
 
         return new ResponseEntity<>(ticketResponse,HttpStatus.CREATED);
     }

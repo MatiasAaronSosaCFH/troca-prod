@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface TicketService extends GenericService<TicketResponse, TicketRequest>{
 
-    TicketResponse create(TicketEnterpriceDto ticketRequest) throws EntityNotFoundException;
+    TicketResponse create(TicketEnterpriceDto ticketRequestm, Long id) throws EntityNotFoundException;
     List<TicketResponse> takeTicketsOnServiceByProfile(Long profileId,Boolean onService);
     TicketResponse changeServiceTicket(Long id);
     List<TicketResponse> listTickets();

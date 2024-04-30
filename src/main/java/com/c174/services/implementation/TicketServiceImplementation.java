@@ -50,11 +50,12 @@ public class TicketServiceImplementation implements TicketService {
     }
 
     @Override
-    public TicketResponse create(TicketEnterpriceDto ticketRequest) throws EntityNotFoundException {
+    public TicketResponse create(TicketEnterpriceDto ticketRequest, Long id) throws EntityNotFoundException {
         EventEntity event = eventRepository.findByNameIgnoreCaseContaining(ticketRequest.getEventName()).get(0);
-
+        ProfileEntity profileEntity = profileRepository.findByUserId(id);
         TicketEntity ticket = new TicketEntity(ticketRequest);
         ticket.setEvent(event);
+        ticket.setOwner(profileEntity);
         ticketRepository.save(ticket);
 
         TicketResponse ticketResponse = ticketMapper.toTicketResponse(ticket);
