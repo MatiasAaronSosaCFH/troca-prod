@@ -13,7 +13,6 @@ import java.util.Date;
 public class EventRequest {
 
     private Long id;
-    @Pattern(regexp = "^[a-zA-Z]+$", message = "Invalid event name")
     @NotEmpty
     @Size(min = 1, max = 50)
     private String name;
