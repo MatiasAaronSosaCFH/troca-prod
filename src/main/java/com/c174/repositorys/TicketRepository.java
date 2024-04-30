@@ -22,6 +22,9 @@ public interface TicketRepository extends JpaRepository<TicketEntity, Long> {
     @Query("SELECT t FROM TicketEntity t WHERE t.isLock = :lock")
     List<TicketEntity> findAllLock(@Param("lock") Boolean lock);
 
+    @Query("SELECT t FROM TicketEntity t WHERE t.onService = :onService")
+    List<TicketEntity> findByOnService(@Param("onService")Boolean onService);
+
     /*@Transactional
     @Modifying
     @Query("UPDATE TicketEntity t SET t.onService = :onService WHERE t.id = :id")
