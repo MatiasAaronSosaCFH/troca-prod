@@ -22,4 +22,6 @@ public interface TicketService extends GenericService<TicketResponse, TicketRequ
     List<TicketResponse> getTicketByEvent(String  name);
     List<TicketResponse> findTicketsByProfileAndByLock(Long id, Boolean lock);
     List<TicketResponse> findAllTicketsNotLock();
+
+    TicketResponse sellTicket(TicketRequest ticketRequest);
 }

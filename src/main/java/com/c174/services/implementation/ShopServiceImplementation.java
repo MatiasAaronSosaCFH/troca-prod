@@ -2,6 +2,7 @@ package com.c174.services.implementation;
 
 import com.c174.exception.AlreadyExistsException;
 import com.c174.models.mpuser.CredentialMPUser;
+import com.c174.models.profile.ProfileEntity;
 import com.c174.models.shop.ShopItem;
 import com.c174.models.shop.UserShop;
 import com.c174.models.ticket.TicketEntity;
@@ -44,9 +45,15 @@ public class ShopServiceImplementation implements ShopService {
         TicketShop ticketsShop = ticket.getItems();
         UserShop user = ticket.getPayer();
 
+        UserEntity userEntity = userRepository.findByEmail(user.getEmail()).get();
         TicketEntity ticketsEntities= ticketRepository.findById(ticketsShop.getId()).get();
+        ProfileEntity profile = profileRepository.findById(userEntity.getProfile().getId()).get();
+
+        ticketsEntities.setOwner(profile);
+        ticketRepository.save(ticketsEntities);
 
         String sandboxInit = createPreference(ticketsEntities, user,findAccessToken(ticketsEntities.getId()));
+
         return sandboxInit;
     }
     //Crea la preferencia de MercadoPago devolviendo el link hacia donde va a ser redirigido el comprador

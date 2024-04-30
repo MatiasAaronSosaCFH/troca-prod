@@ -1,6 +1,7 @@
 package com.c174.controllers;
 
 import com.c174.models.ticket.TicketEnterpriceDto;
+import com.c174.models.ticket.TicketRequest;
 import com.c174.models.ticket.TicketResponse;
 import com.c174.services.abstraccion.TicketService;
 import com.c174.services.implementation.EnterpriseConsumeServiceImp;
@@ -33,20 +34,33 @@ public class TicketController {
         if (ticketResponse == null) return new ResponseEntity<>("Ticket not found",HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(ticketResponse,HttpStatus.OK);
     }
+
+
     @GetMapping("/onService")
     public ResponseEntity<?> takeTicketsFromProfileOnService(@RequestParam Long profileId, @RequestParam Boolean onService){
         List<TicketResponse> ticketResponse = ticketServiceImp.takeTicketsOnServiceByProfile(profileId, onService);
         return new ResponseEntity<>(ticketResponse, HttpStatus.OK);
     }
+
+    @PutMapping("/postOnService")
+    public ResponseEntity<?> postOnService(@RequestParam TicketRequest ticket){
+        if (ticket ==  null) return new ResponseEntity<>();
+        TicketResponse ticketResponse = ticketServiceImp.sellTicket(ticket);
+
+
+    }
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody File file) throws EntityNotFoundException {
+
         Optional<TicketEnterpriceDto> ticketResponseEnterprice = Optional.of(enterpriseConsumeServiceImp.checkTicket(file));
+
         if (ticketResponseEnterprice.get().getIsLocked()){
             return new ResponseEntity<>("Ticket is already on service", HttpStatus.NOT_ACCEPTABLE);
         }
         if (ticketResponseEnterprice.get().getIsPresent()) return new ResponseEntity<>("Ticket is not available", HttpStatus.NOT_ACCEPTABLE);
 
         TicketResponse ticketResponse = ticketServiceImp.create(ticketResponseEnterprice.get());
+
         return new ResponseEntity<>(ticketResponse,HttpStatus.CREATED);
     }
 
@@ -116,6 +130,7 @@ public class TicketController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(bodyResponse);
         }
     }
+
     @Operation(summary = "Get ticket by EVENT_ID, if this include in the EVENT return the ticket")
     @GetMapping("/event/{id}")
     public ResponseEntity<?> getByEvent( @PathVariable Long id){

@@ -68,7 +68,7 @@ public class TicketServiceImplementation implements TicketService {
         Optional<TicketEntity> ticket = ticketRepository.findById(id);
         if (!ticket.isPresent()) return null;
 
-        ticket.get().setOnServie(!ticket.get().getOnServie());
+        ticket.get().setOnService(!ticket.get().getOnService());
         return ticketMapper.toTicketResponse(ticketRepository.save(ticket.get()));
 
     }
@@ -78,7 +78,7 @@ public class TicketServiceImplementation implements TicketService {
         if (ticket.isEmpty()) return ticketMapper.toListTicketResponse(ticket);
         List<TicketEntity> tickets = new ArrayList<>();
         for (TicketEntity ticket1 : ticket){
-            if (ticket1.getOnServie()) tickets.add(ticket1);
+            if (ticket1.getOnService()) tickets.add(ticket1);
         }
         return ticketMapper.toListTicketResponse(tickets);
     }
@@ -167,6 +167,16 @@ public class TicketServiceImplementation implements TicketService {
         List<TicketResponse> ticketResponses = ticketMapper.toListTicketResponse(tickets);
 
         return ticketResponses;
+    }
+
+    @Override
+    public TicketResponse sellTicket(TicketRequest ticketRequest) {
+        TicketEntity ticketEntity = ticketRepository.findById(ticketRequest.getId()).get();
+
+        ticketEntity.setOnService(true);
+        ticketRepository.save(ticketEntity);
+
+        return ticketMapper.toTicketResponse(ticketEntity);
     }
 
     @Override
