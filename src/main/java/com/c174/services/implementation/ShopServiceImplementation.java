@@ -48,11 +48,11 @@ public class ShopServiceImplementation implements ShopService {
         UserEntity userEntity = userRepository.findByEmail(user.getEmail()).get();
         TicketEntity ticketsEntities= ticketRepository.findById(ticketsShop.getId()).get();
         ProfileEntity profile = profileRepository.findById(userEntity.getProfile().getId()).get();
+        
+        String sandboxInit = createPreference(ticketsEntities, user,findAccessToken(ticketsEntities.getId()));
 
         ticketsEntities.setOwner(profile);
         ticketRepository.save(ticketsEntities);
-
-        String sandboxInit = createPreference(ticketsEntities, user,findAccessToken(ticketsEntities.getId()));
 
         return sandboxInit;
     }
