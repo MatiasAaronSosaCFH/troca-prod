@@ -69,7 +69,7 @@ public class TicketController {
 
     @PostMapping("/create/fast")
     public ResponseEntity<?> createTicete(@RequestBody TicketRequest ticketRequest){
-
+        return null;
     }
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestPart(value="file", required = false) MultipartFile file,
