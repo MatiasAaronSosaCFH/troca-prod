@@ -49,7 +49,7 @@ public class TicketController {
     }
 
     @PutMapping("/postOnService")
-    public ResponseEntity<?> postOnService(@RequestParam TicketRequest ticket){
+    public ResponseEntity<?> postOnService(@RequestBody TicketRequest ticket){
         if (ticket ==  null) return new ResponseEntity<>("ticket is not acceptable",HttpStatus.NOT_ACCEPTABLE);
         if (ticket.getId() == null) return new ResponseEntity<>("id is blank", HttpStatus.NOT_ACCEPTABLE);
         if (ticket.getPrice() == 0 || ticket.getPrice() == null) return new ResponseEntity<>("price is not acceptable", HttpStatus.NOT_ACCEPTABLE);
