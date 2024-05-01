@@ -17,6 +17,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TicketRequest {
+
     private Long id;
     private String meta;
     private EventRequest event;

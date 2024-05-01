@@ -76,8 +76,8 @@ public class EventServiceImplementation implements EventService {
         eventEntity.setIsPresent(Boolean.TRUE);
         eventEntity.setImg((String) resultado.get("url"));
         eventEntity.setImgId((String) resultado.get("public_id"));
-        eventEntity.setDateStart(eventRequest.getDateStart());
-        eventEntity.setDateEnt(eventRequest.getDateEnd());
+        eventEntity.setDateStart(event.getDateStart());
+        eventEntity.setDateEnd(event.getDateEnd());
         EventEntity eventToResponse = eventRepository.save(eventEntity);
         EventResponse eventResponse = eventMapper.toEventResponse(eventToResponse);
         return eventResponse;
