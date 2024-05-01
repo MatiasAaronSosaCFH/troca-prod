@@ -71,9 +71,9 @@ public class TicketController {
     public ResponseEntity<?> createTicete(@RequestBody TicketRequest ticketRequest){
         return null;
     }
-    @PostMapping("/create")
+    @PostMapping("/create/{id}")
     public ResponseEntity<?> create(@RequestPart(value="file", required = false) MultipartFile file,
-                                    @RequestPart(value="id") Long id) throws EntityNotFoundException, IOException {
+                                    @PathVariable Long id) throws EntityNotFoundException, IOException {
 
         BufferedImage entry = ImageIO.read(file.getInputStream());
         if (entry == null) return new ResponseEntity<>("Qr is not supported",HttpStatus.NOT_ACCEPTABLE);
