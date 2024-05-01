@@ -4,6 +4,7 @@ import com.c174.exception.EntityNotFoundException;
 import com.c174.models.ticket.TicketEnterpriceDto;
 import com.c174.models.ticket.TicketRequest;
 import com.c174.models.ticket.TicketResponse;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.util.List;
@@ -14,7 +15,7 @@ public interface TicketService extends GenericService<TicketResponse, TicketRequ
     List<TicketResponse> takeTicketsOnServiceByProfile(Long profileId,Boolean onService);
     TicketResponse changeServiceTicket(Long id);
     List<TicketResponse> listTickets();
-    TicketResponse checkTicket(File file);
+    TicketResponse checkTicket(MultipartFile file);
     TicketResponse renewQr(File file);
     TicketResponse lockTicket(Long id);
     List<TicketResponse> getTicketByProfile(Long id);

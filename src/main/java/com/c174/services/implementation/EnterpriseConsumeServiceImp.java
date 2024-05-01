@@ -6,6 +6,7 @@ import com.c174.utils.AbstractClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 
@@ -17,7 +18,7 @@ public class EnterpriseConsumeServiceImp extends AbstractClient implements Enter
     }
 
     @Override
-    public TicketEnterpriceDto checkTicket(File file) {
+    public TicketEnterpriceDto checkTicket(MultipartFile file) {
 
         String url = baseURl + "/ticket/checkTicket";
         System.out.println(url);

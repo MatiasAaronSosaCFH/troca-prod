@@ -73,14 +73,14 @@ public class ProfileController {
     @Operation(summary = "Create tickets")
     @PostMapping("/{id}/ticket")
     public ResponseEntity<?> createTicket(@PathVariable Long id,
-                                          @RequestBody @Valid Optional<TicketRequest> ticket)
+                                          @RequestBody @Valid TicketRequest ticket)
             throws EntityNotFoundException, NoBodyException, AlreadyExistsException, EntityExistsException {
 
-        if( ticket == null || ticket.isEmpty() ){
+        if( ticket == null ){
             throw new NoBodyException("No se recibio ningun dato");
         }
         Map<String, Object> bodyResponse = new HashMap<>();
-        TicketResponse response = profileServiceImplements.createTicket(id, ticket.get());
+        TicketResponse response = profileServiceImplements.createTicket(id, ticket);
         bodyResponse.put("new_ticket", response);
         bodyResponse.put("success", Boolean.TRUE);
         return ResponseEntity.status(HttpStatus.OK).body(bodyResponse);
