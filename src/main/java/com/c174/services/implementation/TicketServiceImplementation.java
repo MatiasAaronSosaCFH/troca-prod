@@ -107,6 +107,15 @@ public class TicketServiceImplementation implements TicketService {
     }
 
     @Override
+    public TicketResponse saveFast(TicketRequest ticketRequest) {
+
+        TicketEntity ticket = ticketMapper.toTicketEntity(ticketRequest);
+
+        ticketRepository.save(ticket);
+        return ticketMapper.toTicketResponse(ticket);
+    }
+
+    @Override
     public TicketResponse renewQr(File file) {
         TicketEnterpriceDto ticketEnterpriceDto = enterpriseConsumeServiceImp.renewQr(file);
         TicketResponse ticketResponse = TicketResponse.builder()
@@ -148,9 +157,9 @@ public class TicketServiceImplementation implements TicketService {
 
     @Override
     public List<TicketResponse> getTicketByEvent(String name) {
-        List<EventEntity> events = eventRepository.findByNameIgnoreCaseContaining(name);
-        if (events.isEmpty()) return null;
-        List<TicketEntity> tickets = events.get(0).getTickets();
+        List<TicketEntity> tickets = ticketRepository.findTicketsByEventName(name);
+        if (tickets.isEmpty()) return null;
+
         List<TicketResponse> ticketResponses = ticketMapper.toListTicketResponse(tickets);
 
         return ticketResponses;
