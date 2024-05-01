@@ -113,7 +113,7 @@ public class TicketServiceImplementation implements TicketService {
         ProfileEntity profile = profileRepository.findById(id).get();
         EventEntity event = eventRepository.findById(ticket.getEvent().getId()).get();
         ticket.setOwner(profile);
-        ticket.setEvennt(event);
+        ticket.setEvent(event);
         ticketRepository.save(ticket);
         return ticketMapper.toTicketResponse(ticket);
     }
