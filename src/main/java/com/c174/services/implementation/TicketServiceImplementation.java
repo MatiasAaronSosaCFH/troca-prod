@@ -192,7 +192,7 @@ public class TicketServiceImplementation implements TicketService {
     @Override
     public TicketResponse sellTicket(TicketRequest ticketRequest) {
         TicketEntity ticketEntity = ticketRepository.findById(ticketRequest.getId()).get();
-
+        ticketEntity.setPrice(ticketRequest.getPrice());
         ticketEntity.setOnService(true);
         ticketRepository.save(ticketEntity);
 
