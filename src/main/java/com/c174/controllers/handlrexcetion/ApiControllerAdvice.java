@@ -71,5 +71,14 @@ public class ApiControllerAdvice {
         return new ExceptionDto(HttpStatus.BAD_REQUEST.value(),"Error en Mercado Pago", detalle, Boolean.FALSE);
     }
 
+    @ExceptionHandler({NullPointerException.class, NullPointerException.class})
+    @ResponseBody
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ExceptionDto exceptionNullPointerException(NullPointerException ex){
+        HashMap<String, Object> detalle = new HashMap<>();
+        detalle.put("error", ex.getMessage());
+        return new ExceptionDto(HttpStatus.BAD_REQUEST.value(),"Error no hay entidades", detalle, Boolean.FALSE);
+    }
+
 
 }

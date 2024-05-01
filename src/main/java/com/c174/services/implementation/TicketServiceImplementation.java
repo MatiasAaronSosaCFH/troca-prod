@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -96,7 +97,7 @@ public class TicketServiceImplementation implements TicketService {
         return ticketMapper.toListTicketResponse(ticketsOnService);
     }
     @Override
-    public TicketResponse checkTicket(MultipartFile file) {
+    public TicketResponse checkTicket(MultipartFile file) throws IOException {
         TicketEnterpriceDto ticketEnterprice = enterpriseConsumeServiceImp.checkTicket(file);
         if(ticketEnterprice == null) return null;
         TicketResponse ticketResponse = TicketResponse.builder()

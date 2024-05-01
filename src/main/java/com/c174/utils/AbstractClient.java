@@ -2,6 +2,8 @@ package com.c174.utils;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 
@@ -14,6 +16,7 @@ public abstract class  AbstractClient {
 
     protected AbstractClient(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
+        this.restTemplate.getMessageConverters().add(new FormHttpMessageConverter());
     }
 
     protected HttpHeaders buildAuthToken(String token){
@@ -22,4 +25,5 @@ public abstract class  AbstractClient {
         headers.set("Autorization", "Bearer" + token);
         return headers;
     }
+
 }

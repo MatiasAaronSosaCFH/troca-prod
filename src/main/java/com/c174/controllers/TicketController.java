@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -71,16 +72,16 @@ public class TicketController {
     public ResponseEntity<?> createTicete(@RequestBody TicketRequest ticketRequest){
         return null;
     }
-    @PostMapping("/create/{id}")
+    @PostMapping( path= "/create/{id}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<?> create(@RequestPart(value="file", required = false) MultipartFile file,
                                     @PathVariable Long id) throws EntityNotFoundException, IOException {
 
         BufferedImage entry = ImageIO.read(file.getInputStream());
         if (entry == null) return new ResponseEntity<>("Qr is not supported",HttpStatus.NOT_ACCEPTABLE);
+
         File img = cloudinaryService.convetir(file);
 
         Optional<TicketEnterpriceDto> ticketResponseEnterprice = Optional.of(enterpriseConsumeServiceImp.checkTicket(file));
-
         if (ticketResponseEnterprice.get().getIsLocked()){
             return new ResponseEntity<>("Ticket is already on service", HttpStatus.NOT_ACCEPTABLE);
         }
@@ -99,7 +100,7 @@ public class TicketController {
     }
 
     @GetMapping("/checkTicket")
-    public ResponseEntity<?> checkTicket(@RequestParam MultipartFile file){
+    public ResponseEntity<?> checkTicket(@RequestParam MultipartFile file) throws IOException {
         TicketResponse ticketResponse = ticketServiceImp.checkTicket(file);
         if (ticketResponse == null) return new ResponseEntity<>("ticket is not available", HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(ticketResponse, HttpStatus.OK);

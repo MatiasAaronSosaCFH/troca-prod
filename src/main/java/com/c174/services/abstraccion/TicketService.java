@@ -7,6 +7,7 @@ import com.c174.models.ticket.TicketResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public interface TicketService extends GenericService<TicketResponse, TicketRequest>{
@@ -15,7 +16,7 @@ public interface TicketService extends GenericService<TicketResponse, TicketRequ
     List<TicketResponse> takeTicketsOnServiceByProfile(Long profileId,Boolean onService);
     TicketResponse changeServiceTicket(Long id);
     List<TicketResponse> listTickets();
-    TicketResponse checkTicket(MultipartFile file);
+    TicketResponse checkTicket(MultipartFile file) throws IOException;
     TicketResponse renewQr(File file);
     TicketResponse lockTicket(Long id);
     List<TicketResponse> getTicketByProfile(Long id);
