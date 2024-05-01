@@ -15,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class EventResponse {
+
     @Positive
     private Long id;
     @Pattern(regexp = "^[a-zA-Z0-9 ]*$", message = "El nombre no puede contener caracteres especiales")
