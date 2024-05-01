@@ -69,8 +69,12 @@ public class TicketController {
 
     @PostMapping("/create/fast")
     public ResponseEntity<?> createTicete(@RequestBody TicketRequest ticketRequest){
-        return null;
+
+        TicketResponse ticketResponse = ticketServiceImp.saveFast(ticketRequest);
+
+        return new ResponseEntity<>(ticketResponse, HttpStatus.CREATED);
     }
+
     @PostMapping("/create/{id}")
     public ResponseEntity<?> create(@RequestPart(value="file", required = false) MultipartFile file,
                                     @PathVariable Long id) throws EntityNotFoundException, IOException {

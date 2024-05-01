@@ -16,7 +16,7 @@ public interface TicketRepository extends JpaRepository<TicketEntity, Long> {
     @Query("SELECT t FROM TicketEntity t WHERE t.owner.id = ?1")
     List<TicketEntity> findByProfileId(Long id);
 
-    @Query("SELECT t FROM TicketEntity t WHERE t.event.id = ?1")
+    @Query("SELECT t FROM TicketEntity t WHERE t.event.id = ?1 AND t.onService = true")
     List<TicketEntity> findByEventId(Long id);
 
     @Query("SELECT t FROM TicketEntity t WHERE t.isLock = :lock")
@@ -24,6 +24,9 @@ public interface TicketRepository extends JpaRepository<TicketEntity, Long> {
 
     @Query("SELECT t FROM TicketEntity t WHERE t.onService = :onService")
     List<TicketEntity> findByOnService(@Param("onService")Boolean onService);
+
+    @Query("SELECT t FROM TicketEntity t WHERE t.event.name = ?1 AND t.onService = true")
+    List<TicketEntity> findTicketsByEventName(String name);
 
     /*@Transactional
     @Modifying
