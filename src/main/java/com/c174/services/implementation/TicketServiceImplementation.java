@@ -107,10 +107,11 @@ public class TicketServiceImplementation implements TicketService {
     }
 
     @Override
-    public TicketResponse saveFast(TicketRequest ticketRequest) {
+    public TicketResponse saveFast(TicketRequest ticketRequest, Long id) {
 
         TicketEntity ticket = ticketMapper.toTicketEntity(ticketRequest);
-
+        ProfileEntity profile = profileRepository.findById(id).get();
+        ticket.setOwner(profile);
         ticketRepository.save(ticket);
         return ticketMapper.toTicketResponse(ticket);
     }
