@@ -159,7 +159,7 @@ public class ProfileServiceImplements implements ProfileService {
 
         String uuidRandom = profileEntity.getUser().getCredentialMPUser().getId().toString();
 
-        String url = base_url_auth + redirectUrl + id + "&state=" +uuidRandom;
+        -String url = base_url_auth + "https://c1-m-java.vercel.app/user/profile&state=" +uuidRandom;
         return url;
     }
 
