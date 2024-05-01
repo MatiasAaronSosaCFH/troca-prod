@@ -75,7 +75,7 @@ public class TicketController {
         if (entry == null) return new ResponseEntity<>("Qr is not supported",HttpStatus.NOT_ACCEPTABLE);
         File img = cloudinaryService.convetir(file);
 
-        Optional<TicketEnterpriceDto> ticketResponseEnterprice = Optional.of(enterpriseConsumeServiceImp.checkTicket(img));
+        Optional<TicketEnterpriceDto> ticketResponseEnterprice = Optional.of(enterpriseConsumeServiceImp.checkTicket(file));
 
         if (ticketResponseEnterprice.get().getIsLocked()){
             return new ResponseEntity<>("Ticket is already on service", HttpStatus.NOT_ACCEPTABLE);
@@ -95,7 +95,7 @@ public class TicketController {
     }
 
     @GetMapping("/checkTicket")
-    public ResponseEntity<?> checkTicket(@RequestParam File file){
+    public ResponseEntity<?> checkTicket(@RequestParam MultipartFile file){
         TicketResponse ticketResponse = ticketServiceImp.checkTicket(file);
         if (ticketResponse == null) return new ResponseEntity<>("ticket is not available", HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(ticketResponse, HttpStatus.OK);

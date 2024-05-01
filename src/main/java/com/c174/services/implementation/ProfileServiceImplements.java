@@ -104,7 +104,7 @@ public class ProfileServiceImplements implements ProfileService {
     }
     @Override
     @Transactional
-    public TicketResponse createTicket (Long profileId, TicketRequest newTicketRequest) throws EntityNotFoundException{
+    public TicketResponse createTicket(Long profileId, TicketRequest newTicketRequest) throws EntityNotFoundException{
         if(!profileRepository.existsById(profileId) ||
                 profileRepository.findById(profileId).get().getIsPresent() == Boolean.FALSE){
             throw new EntityNotFoundException("Profile not found or already deleted");
