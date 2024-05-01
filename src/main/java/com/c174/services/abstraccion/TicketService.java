@@ -17,7 +17,7 @@ public interface TicketService extends GenericService<TicketResponse, TicketRequ
     List<TicketResponse> listTickets();
     TicketResponse checkTicket(MultipartFile file);
 
-    TicketResponse saveFast(TicketRequest ticketRequest);
+    TicketResponse saveFast(TicketRequest ticketRequest, Long id);
     TicketResponse renewQr(File file);
     TicketResponse lockTicket(Long id);
     List<TicketResponse> getTicketByProfile(Long id);

@@ -68,9 +68,9 @@ public class TicketController {
     }
 
     @PostMapping("/create/fast")
-    public ResponseEntity<?> createTicete(@RequestBody TicketRequest ticketRequest){
+    public ResponseEntity<?> createTicete(@RequestParam TicketRequest ticketRequest, @RequestParam Long profileId){
 
-        TicketResponse ticketResponse = ticketServiceImp.saveFast(ticketRequest);
+        TicketResponse ticketResponse = ticketServiceImp.saveFast(ticketRequest, profileId);
 
         return new ResponseEntity<>(ticketResponse, HttpStatus.CREATED);
     }
