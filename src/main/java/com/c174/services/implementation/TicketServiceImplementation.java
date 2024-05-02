@@ -39,6 +39,12 @@ public class TicketServiceImplementation implements TicketService {
 
         this.enterpriseConsumeServiceImp = enterpriseConsumeServiceImp;
     }
+    public TicketResponse deleteTicket(Long id){
+        TicketEntity ticketDelete = ticketRepository.findById(id);
+        if(ticketDelete == null) return null;
+        TicketEntity ticket = ticketRepository.delete(ticketDelete);
+        return ticketMapper.toTicketResponse(ticket);
+    }
     @Override
     @Transactional(readOnly = true)
     public List<TicketResponse> getAll() throws NullPointerException {
