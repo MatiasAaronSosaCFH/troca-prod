@@ -10,11 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 
 @RestController
@@ -56,12 +59,18 @@ public class EventController {
 
     @Operation(summary = "Create a new event - only admin")
     @PostMapping("/create")
-    public ResponseEntity<?> saveEvent( @RequestBody @Valid Optional<EventRequest> event) throws NoBodyException,  AlreadyExistsException, EntityExistsException {
+    public ResponseEntity<?> saveEvent(@RequestPart(value="request") @Valid EventRequest event,
+                                       @RequestPart(value="files", required = false) MultipartFile img)
+            throws  IOException {
+
+        BufferedImage entry = ImageIO.read(img.getInputStream());
+        if (entry == null) return new ResponseEntity<>("Imageg is null", HttpStatus.NOT_ACCEPTABLE);
+
         Map<String, Object> bodyResponse = new HashMap<>();
-        if( event == null || event.isEmpty() ){
-            throw new NoBodyException("No se recibio ningun dato");
+        if( event == null  ){
+            return new ResponseEntity<>("no hay datos", HttpStatus.BAD_REQUEST);
         }
-        EventResponse response = eventService.save(event.get());
+        EventResponse response = eventService.saveImg(event, img);
         bodyResponse.put("data", response);
         bodyResponse.put("success", Boolean.TRUE);
         return ResponseEntity.status(HttpStatus.CREATED).body(bodyResponse);
@@ -79,12 +88,12 @@ public class EventController {
 
     @Operation(summary = "Update a event - only admin")
     @PatchMapping("/id/{id}")
-    public ResponseEntity<?> updateEvent(@PathVariable Long id, @RequestBody @Valid Optional<EventRequest> event) throws EntityUploadException, EntityNotFoundException, NoBodyException {
+    public ResponseEntity<?> updateEvent(@PathVariable Long id, @RequestBody @Valid EventRequest event) throws EntityUploadException, EntityNotFoundException, NoBodyException {
         Map<String, Object> bodyResponse = new HashMap<>();
-        if( event == null || event.isEmpty() ){
+        if( event == null ){
             throw new NoBodyException("No se recibio ningun dato");
         }
-        eventService.update(id, event.get());
+        eventService.update(id, event);
         bodyResponse.put("data", "Entity update");
         bodyResponse.put("success", Boolean.TRUE);
         return ResponseEntity.status(HttpStatus.OK).body(bodyResponse);

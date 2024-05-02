@@ -26,6 +26,8 @@ import java.util.UUID;
 public class ProfileServiceImplements implements ProfileService {
     @Value("${mercadopago.base_url_auth}")
     private String base_url_auth;
+    @Value("${mercadopago.redirect_url}")
+    private String redirectUrl;
     private ProfileRepository profileRepository;
     private TicketRepository ticketRepository;
     private final ProfileMapper profileMapper;
@@ -102,7 +104,7 @@ public class ProfileServiceImplements implements ProfileService {
     }
     @Override
     @Transactional
-    public TicketResponse createTicket (Long profileId, TicketRequest newTicketRequest) throws EntityNotFoundException{
+    public TicketResponse createTicket(Long profileId, TicketRequest newTicketRequest) throws EntityNotFoundException{
         if(!profileRepository.existsById(profileId) ||
                 profileRepository.findById(profileId).get().getIsPresent() == Boolean.FALSE){
             throw new EntityNotFoundException("Profile not found or already deleted");
@@ -157,7 +159,7 @@ public class ProfileServiceImplements implements ProfileService {
 
         String uuidRandom = profileEntity.getUser().getCredentialMPUser().getId().toString();
 
-        String url = base_url_auth+uuidRandom;
+        String url = base_url_auth + "https://c17-34-m-java.vercel.app/user/profile&state=" +uuidRandom;
         return url;
     }
 

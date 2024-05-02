@@ -1,21 +1,29 @@
 package com.c174.controllers;
 
 import com.c174.models.ticket.TicketEnterpriceDto;
+import com.c174.models.ticket.TicketRequest;
 import com.c174.models.ticket.TicketResponse;
 import com.c174.services.abstraccion.TicketService;
 import com.c174.services.implementation.EnterpriseConsumeServiceImp;
 import com.c174.exception.EntityNotFoundException;
+import com.c174.utils.CloudinaryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/ticket")
@@ -25,16 +33,65 @@ public class TicketController {
 
     private final TicketService ticketServiceImp;
     private final EnterpriseConsumeServiceImp enterpriseConsumeServiceImp;
+    private final CloudinaryService cloudinaryService;
 
-    @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody File file) throws EntityNotFoundException {
-        TicketEnterpriceDto ticketResponseEnterprice = enterpriseConsumeServiceImp.checkTicket(file);
-        if (ticketResponseEnterprice.getIsLocked()){
+    @PutMapping("/changeService/{id}")
+    public ResponseEntity<?> changeServiceTicket(@PathVariable Long id){
+        TicketResponse ticketResponse = ticketServiceImp.changeServiceTicket(id);
+        if (ticketResponse == null) return new ResponseEntity<>("Ticket not found",HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(ticketResponse,HttpStatus.OK);
+    }
+
+    @GetMapping("/onService")
+    public ResponseEntity<?> takeTicketsFromProfileOnService(@RequestParam Boolean onService){
+        List<TicketResponse> ticketResponse = ticketServiceImp.findByOnService(onService);
+        return new ResponseEntity<>(ticketResponse, HttpStatus.OK);
+    }
+
+    @PutMapping("/postOnService")
+    public ResponseEntity<?> postOnService(@RequestBody TicketRequest ticket){
+        if (ticket ==  null) return new ResponseEntity<>("ticket is not acceptable",HttpStatus.NOT_ACCEPTABLE);
+        if (ticket.getId() == null) return new ResponseEntity<>("id is blank", HttpStatus.NOT_ACCEPTABLE);
+        if (ticket.getPrice() == 0 || ticket.getPrice() == null) return new ResponseEntity<>("price is not acceptable", HttpStatus.NOT_ACCEPTABLE);
+        TicketResponse ticketResponse = ticketServiceImp.sellTicket(ticket);
+        Map<TicketResponse, String> response = new HashMap<>();
+        response.put(ticketResponse, "successfuly create");
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/wallet/{id}")
+    public ResponseEntity<?> walletTickets(@PathVariable @NotBlank Long id, @RequestParam @NotBlank Boolean onService){
+        List<TicketResponse> tickets = ticketServiceImp.takeTicketsOnServiceByProfile(id,onService);
+        if (tickets == null) return new ResponseEntity<>("Profile not found", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(tickets, HttpStatus.OK);
+    }
+
+    @PostMapping("/create/fast")
+    public ResponseEntity<?> createTicete(@RequestBody TicketRequest ticketRequest){
+
+        TicketResponse ticketResponse = ticketServiceImp.saveFast(ticketRequest, ticketRequest.getOwner().getId());
+
+        return new ResponseEntity<>(ticketResponse, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/create/{id}")
+    public ResponseEntity<?> create(@RequestPart(value="file", required = false) MultipartFile file,
+                                    @PathVariable Long id) throws EntityNotFoundException, IOException {
+
+        BufferedImage entry = ImageIO.read(file.getInputStream());
+        if (entry == null) return new ResponseEntity<>("Qr is not supported",HttpStatus.NOT_ACCEPTABLE);
+        File img = cloudinaryService.convetir(file);
+
+        Optional<TicketEnterpriceDto> ticketResponseEnterprice = Optional.of(enterpriseConsumeServiceImp.checkTicket(file));
+
+        if (ticketResponseEnterprice.get().getIsLocked()){
             return new ResponseEntity<>("Ticket is already on service", HttpStatus.NOT_ACCEPTABLE);
         }
+        if (ticketResponseEnterprice.get().getIsPresent()) return new ResponseEntity<>("Ticket is not available", HttpStatus.NOT_ACCEPTABLE);
 
+        TicketResponse ticketResponse = ticketServiceImp.create(ticketResponseEnterprice.get(), id);
 
-        TicketResponse ticketResponse = ticketServiceImp.create(ticketResponseEnterprice);
         return new ResponseEntity<>(ticketResponse,HttpStatus.CREATED);
     }
 
@@ -46,8 +103,9 @@ public class TicketController {
     }
 
     @GetMapping("/checkTicket")
-    public ResponseEntity<?> checkTicket(@RequestParam File file){
+    public ResponseEntity<?> checkTicket(@RequestParam MultipartFile file){
         TicketResponse ticketResponse = ticketServiceImp.checkTicket(file);
+        if (ticketResponse == null) return new ResponseEntity<>("ticket is not available", HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(ticketResponse, HttpStatus.OK);
     }
 
@@ -104,6 +162,7 @@ public class TicketController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(bodyResponse);
         }
     }
+
     @Operation(summary = "Get ticket by EVENT_ID, if this include in the EVENT return the ticket")
     @GetMapping("/event/{id}")
     public ResponseEntity<?> getByEvent( @PathVariable Long id){

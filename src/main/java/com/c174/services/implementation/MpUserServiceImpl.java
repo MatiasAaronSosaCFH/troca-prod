@@ -40,6 +40,7 @@ public class MpUserServiceImpl extends AbstractMPClient implements MpUserService
         requestToken.setGrant_type(grantType.authorization_code);
         requestToken.setState(randomId);
 
+
         ResponseEntity <CredentialMPRequest> response = restTemplate.postForEntity(baseUrl,requestToken, CredentialMPRequest.class);
 
         if(response.getStatusCode().is2xxSuccessful()){
