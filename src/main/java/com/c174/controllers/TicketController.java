@@ -75,6 +75,13 @@ public class TicketController {
         return new ResponseEntity<>(ticketResponse, HttpStatus.CREATED);
     }
 
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> changeServiceTicket(@PathVariable Long id){
+        TicketResponse ticketResponse = ticketServiceImp.deleteTicket(id);
+        if (ticketResponse == null) return new ResponseEntity<>("Ticket not found",HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(ticketResponse,HttpStatus.OK);
+    }
+    
     @PostMapping("/create/{id}")
     public ResponseEntity<?> create(@RequestPart(value="file", required = false) MultipartFile file,
                                     @PathVariable Long id) throws EntityNotFoundException, IOException {
